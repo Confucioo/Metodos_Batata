@@ -123,7 +123,7 @@ y0, t0, h, n, func = sympify(lista[1]), sympify(lista[2]), sympify(lista[3]), sy
 t, y = symbols("t y")
 k = int(lista[6])
 
-print('Metodo de Euler')
+print('Adams Moulton por Euler Inverso')
 
 print('h = '+str(h))
 for i in range(0, k):
