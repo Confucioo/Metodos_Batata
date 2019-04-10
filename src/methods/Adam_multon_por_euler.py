@@ -1,6 +1,27 @@
 from mpmath import *
 from sympy import *
 
+def k_6(func, k, n, f, t0):
+    y_prox = symbols("y_prox")
+    for i in range(k, n+1):
+        k0 = (95/float(288))*func.subs([(y,y_prox),(t,t0+h)])
+        k1 = (1427/float(1440))*func.subs([(y,f[4]),(t,t0)])
+        k2 = (133/float(240))*func.subs([(y,f[3]),(t,t0-h)])
+        k3 = (241/float(720))*func.subs([(y,f[2]),(t,t0-h*2)])
+        k4 = (173/float(1440))*func.subs([(y,f[1]),(t,t0-h*3)])
+        k5 = (3/float(160))*func.subs([(y,f[0]),(t,t0-h*4)])
+        res = f[4] + h*(k0 + k1 - k2 + k3 - k4 + k5) - y_prox
+        res = solve(res,y_prox)
+        f[0] = f[1]
+        f[1] = f[2]
+        f[2] = f[3]
+        f[3] = f[4]
+        f[4] = res[0]
+        print (str(i) + ' ' + str(f[4]))
+        t0=t0+h
+
+
+
 arq = open('entrada.txt', 'r')
 
 texto = arq.readline()
@@ -14,33 +35,20 @@ print(lista[5])
 
 y0, t0, h, n, func = sympify(lista[1]), sympify(lista[2]), sympify(lista[3]), sympify(lista[4]), sympify(lista[5])
 t, y = symbols("t y")
-
-
-print('Metodo de Euler')
 f=[]
+k = int(lista[6])
+print('Metodo de Euler')
+
 print('h = '+str(h))
-print('t0 = '+str(t0))
-for i in range(0, 5):
-   
-    print (str(i) + ' ' + str(y0))
+for i in range(1, k):
     k1 = func.subs([(y,y0),(t,t0)])
     y0 = y0+h*k1
     f.append(y0)
+    print(str(i) + ' ' + str(y0))
     t0=t0+h
-
-
-for i in range(5, n+1):
-    fy3 = (3/8.)* func.subs([(y,fy3),(t,t0)])
-    fy2 = (19/24.)*func.subs([(y,f[2]),(t,t0-h)])
-    fy1 = (-5/24.)*func.subs([(y,f[1]),(t,t0-h*2)])
-    fy0 = (1/24.)*func.subs([(y,f[0]),(t,t0-h*3)])
-
-    y_prox = f[3] + h * (fy3 + fy2 - fy1 + fy0)
-
-    f[0] = f[1]
-    f[1] = f[2]
-    f[2] = f[3]
-    f[3] = y_prox
-    print (str(i) + ' ' + str(y_prox))
-    t0 = t0+h
     
+
+
+k_6(func, k, n, f, t0)
+
+
